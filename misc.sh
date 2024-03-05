@@ -32,7 +32,13 @@ newdesktopfile() {
 ### Make quick notes into my syncthing folder
 note() {
     DATETIME=$(date '+%F_%Hh%M')  
-    nvim ~/Sync/notes_${DATETIME}.md
+    #if no args, then make a new note with time stamp
+    if [ $# -eq 0 ]; then
+        nvim ~/Sync/quicknote/note_${DATETIME}.md
+    else
+        # if there are args, then make a new note with the args as the title
+        nvim ~/Sync/quicknote/$1.md
+    fi
 }
 
 ### Open the last note I just created
@@ -43,4 +49,14 @@ noteopenlast() {
     nvim $lastnote
 }
 
-
+### Copy the content of a file to the clipboard
+copycontent() {
+    if (( $# != 1 )); then
+        echo "Usage: copycontent <filename>"
+        echo "xclip must be installed for this to work. (sudo apt install xclip)"
+        return
+    else
+        cat $1 | xclip -selection clipboard
+        echo "Copying content of $1 to clipboard..."
+    fi
+}
